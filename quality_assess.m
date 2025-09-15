@@ -24,10 +24,9 @@ ssim = psnr;
 for ii = 1:prod(Nway(3:end))
     cd Quality_Indices
     psnr(ii) = psnr_index(imagery1(:, :, ii), imagery2(:, :, ii));
-    % 因为ssim_index是邓尚琦给的代码，需要乘255
-    %ssim(ii) = ssim_index(imagery1(:, :, ii)*255, imagery2(:, :, ii)*255);
     cd ..
 end
 mean_psnr = mean(psnr);
 %mean_ssim = mean(ssim);
 %out = [mean(psnr), mean(ssim)];
+
