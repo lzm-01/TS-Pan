@@ -27,7 +27,6 @@ def save_feature_map(feature_map, save_dir, filename):
     if feature_map_2d.size(0) == 1:
         feature_map_2d = feature_map_2d.squeeze(0).squeeze(0)
     else:
-        # 处理掩码返回多个样本的情况（在您的测试循环中不太可能发生）
         print(f"警告：特征图的批大小为 {feature_map_2d.size(0)}。仅可视化第一个。")
         feature_map_2d = feature_map_2d[0].squeeze(0)
 
@@ -45,25 +44,24 @@ def save_feature_map(feature_map, save_dir, filename):
 
 def visualize_feature_maps_advanced(feature_map, save_dir, filename_prefix, method='grid'):
     """
-    将特征图张量保存为可视化图像，支持多种方法。
+    将特征图张量保存为可视化图像
 
     Args:
         feature_map (torch.Tensor): 特征图张量，形状为 [B, C, H, W]。
         save_dir (str): 保存图像的目录。
-        filename_prefix (str): 保存文件的前缀 (例如: 'stage0_output')。
+        filename_prefix (str): 保存文件的前缀。
         method (str): 可视化方法，可选 'mean', 'max', 'grid'。
     """
     if not os.path.exists(save_dir):
         os.makedirs(save_dir, exist_ok=True)
 
-    # 我们通常只可视化一个batch中的第一个样本
     if feature_map.size(0) > 1:
         print(f"警告: 特征图的批大小为 {feature_map.size(0)}。仅可视化第一个。")
     fm = feature_map[0].detach().cpu()  # Shape: [C, H, W]
 
     save_path = os.path.join(save_dir, f"{filename_prefix}_{method}.png")
 
-    # --- 方法一：平均值投影 (你的原始方法，会导致“纯蓝色”问题) ---
+    # --- 方法一：平均值投影
     if method == 'mean':
         aggregated_map = torch.mean(fm, dim=0).numpy()  # Shape: [H, W]
         if aggregated_map.max() == aggregated_map.min():
@@ -73,7 +71,7 @@ def visualize_feature_maps_advanced(feature_map, save_dir, filename_prefix, meth
         img_colored = cv2.applyColorMap(img_normalized, cv2.COLORMAP_JET)
         cv2.imwrite(save_path, img_colored)
 
-    # --- 方法二：最大值投影 (推荐用于快速查看激活区域) ---
+    # --- 方法二：最大值投影
     elif method == 'max':
         aggregated_map = torch.max(fm, dim=0)[0].numpy()  # Shape: [H, W]
         if aggregated_map.max() == aggregated_map.min():
@@ -83,7 +81,7 @@ def visualize_feature_maps_advanced(feature_map, save_dir, filename_prefix, meth
         img_colored = cv2.applyColorMap(img_normalized, cv2.COLORMAP_JET)
         cv2.imwrite(save_path, img_colored)
 
-    # --- 方法三：通道网格 (推荐用于详细分析，最能反映真实情况) ---
+    # --- 方法三：通道网格
     elif method == 'grid':
         num_channels = fm.size(0)
         h, w = fm.size(1), fm.size(2)
@@ -97,7 +95,7 @@ def visualize_feature_maps_advanced(feature_map, save_dir, filename_prefix, meth
         for i in range(num_channels):
             channel_img = fm[i].numpy()
 
-            # 对每个通道独立进行归一化，这是避免信息丢失的关键
+            # 对每个通道独立进行归一化
             if channel_img.max() > channel_img.min():
                 channel_img = cv2.normalize(channel_img, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
             else:
@@ -157,7 +155,6 @@ class ExpSolver(BaseSolver):
         self.model.eval()
         ms, _, pan = load_h5py(self.cfg['test']['data_dir'])
 
-        # 我们只可视化第一个样本（k=0）作为示例
         k = 13
         print(f"\n--- 正在处理并可视化样本 {k} ---")
 
@@ -313,3 +310,4 @@ class ExpSolver(BaseSolver):
             self.eval()
         else:
             raise ValueError('Mode error!')
+
