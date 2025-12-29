@@ -37,124 +37,7 @@ from rich.progress import (
 #     TimeRemainingColumn(),
 # )
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
-import torch.fft
 
-
-class HighFrequencyLoss(nn.Module):
-    """
-    基于傅里叶变换的高频损失函数
-    通过遮住低频部分，专注于学习高频细节信息
-    """
-
-    def __init__(self, low_freq_mask_ratio=0.1, loss_type='l1'):
-        """
-        Args:
-            low_freq_mask_ratio: 低频遮罩比例 (0-1)，表示从中心遮住多大比例的低频
-            loss_type: 损失函数类型 ('l1', 'l2', 'smooth_l1')
-        """
-        super(HighFrequencyLoss, self).__init__()
-        self.low_freq_mask_ratio = low_freq_mask_ratio
-        self.loss_type = loss_type
-
-        if loss_type == 'l1':
-            self.criterion = nn.L1Loss()
-        elif loss_type == 'l2':
-            self.criterion = nn.MSELoss()
-        elif loss_type == 'smooth_l1':
-            self.criterion = nn.SmoothL1Loss()
-        else:
-            raise ValueError(f"Unsupported loss type: {loss_type}")
-
-    def create_high_freq_mask(self, shape, device):
-        """
-        创建高频遮罩，遮住中心的低频部分
-        Args:
-            shape: (H, W) 图像的高宽
-            device: 设备
-        Returns:
-            mask: 高频遮罩，低频部分为0，高频部分为1
-        """
-        H, W = shape
-        center_h, center_w = H // 2, W // 2
-
-        # 计算遮罩半径
-        mask_radius_h = int(H * self.low_freq_mask_ratio / 2)
-        mask_radius_w = int(W * self.low_freq_mask_ratio / 2)
-
-        # 创建遮罩
-        mask = torch.ones((H, W), device=device)
-
-        # 遮住中心低频部分（圆形或椭圆形遮罩）
-        y, x = torch.meshgrid(torch.arange(H, device=device),
-                              torch.arange(W, device=device), indexing='ij')
-
-        # 计算到中心的归一化距离
-        dist_h = ((y - center_h).float() / mask_radius_h) ** 2
-        dist_w = ((x - center_w).float() / mask_radius_w) ** 2
-        dist = torch.sqrt(dist_h + dist_w)
-
-        # 低频部分设为0
-        mask[dist <= 1.0] = 0
-
-        return mask
-
-    def extract_high_frequency(self, image, mask):
-        """
-        提取图像的高频部分
-        Args:
-            image: 输入图像 (B, C, H, W)
-            mask: 高频遮罩 (H, W)
-        Returns:
-            high_freq_image: 高频部分的图像
-        """
-        B, C, H, W = image.shape
-
-        # 对每个通道进行傅里叶变换
-        high_freq_image = torch.zeros_like(image)
-
-        for b in range(B):
-            for c in range(C):
-                # 傅里叶变换
-                fft_image = torch.fft.fft2(image[b, c])
-
-                # 将零频率移到中心
-                fft_shifted = torch.fft.fftshift(fft_image)
-
-                # 应用高频遮罩
-                fft_high_freq = fft_shifted * mask
-
-                # 逆变换回空间域
-                fft_ishifted = torch.fft.ifftshift(fft_high_freq)
-                high_freq_reconstructed = torch.fft.ifft2(fft_ishifted)
-
-                # 取实部
-                high_freq_image[b, c] = high_freq_reconstructed.real
-
-        return high_freq_image
-
-    def forward(self, pred, target):
-        """
-        计算高频损失
-        Args:
-            pred: 预测图像 (B, C, H, W)
-            target: 目标图像 (B, C, H, W)
-        Returns:
-            loss: 高频损失值
-        """
-        B, C, H, W = pred.shape
-        device = pred.device
-
-        # 创建高频遮罩
-        mask = self.create_high_freq_mask((H, W), device)
-
-        # 提取高频部分
-        pred_high_freq = self.extract_high_frequency(pred, mask)
-        target_high_freq = self.extract_high_frequency(target, mask)
-
-        # 计算损失
-        loss = self.criterion(pred_high_freq, target_high_freq)
-
-        return loss
 class CVLoss(nn.Module):
     def __init__(self, loss_weight=1.0,reduction='mean'):
         super(CVLoss, self).__init__()
@@ -365,15 +248,6 @@ class Solver(BaseSolver):
         if not os.path.exists(self.cfg['checkpoint'] + '/' + str(self.log_name)):
             os.mkdir(self.cfg['checkpoint'] + '/' + str(self.log_name))
         torch.save(self.ckp, os.path.join(self.cfg['checkpoint'] + '/' + str(self.log_name), '{}.pth'.format(self.epoch)))
-
-
-        # if self.cfg['save_best']:
-        #     if self.records['SSIM'] != [] and self.records['SSIM'][-1] == np.array(self.records['SSIM']).max():
-        #         shutil.copy(os.path.join(self.cfg['checkpoint'] + '/' + str(self.log_name), 'latest.pth'),
-        #                     os.path.join(self.cfg['checkpoint'] + '/' + str(self.log_name), 'bestSSIM.pth'))
-        #     if self.records['PSNR'] !=[] and self.records['PSNR'][-1]==np.array(self.records['PSNR']).max():
-        #         shutil.copy(os.path.join(self.cfg['checkpoint'] + '/' + str(self.log_name), 'latest.pth'),
-        #                     os.path.join(self.cfg['checkpoint'] + '/' + str(self.log_name), 'bestPSNR.pth'))
 
     def run(self):
         self.check_gpu()
