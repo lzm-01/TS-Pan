@@ -1,0 +1,59 @@
+
+name: Net
+algorithm: stage-one #freu2net_v1 freu2net_v2
+nEpochs: 500
+gpu_mode: True
+#save_best: True
+gpus: [4]
+threads: 0  #num_works
+log_dir: /data/lzm/qb/stage-one/logs/
+
+
+seed: 0328 #123
+checkpoint: /data/lzm/qb/stage-one/ckpt
+data_dir_train: /data/lzm/PANCollection/qb/train/train_qb.h5 #/data/lzm/PANCollection/gf2/train/train_gf2.h5
+data_dir_eval: /data/lzm/PANCollection/qb/train/valid_qb.h5
+source_ms: ms
+source_pan: pan
+
+pretrain:
+  pretrained: False
+  pre_sr: stage-one_4_1753599835/250.pth #unet_pan_4_1669425995/best.pth
+  pre_folder: /data/lzm/contrast/stage-one/ckpt/
+
+test:  #用于测试
+  algorithm: stage-one #pannetffft
+  type: test #[test, eval]
+  data_dir: /data/lzm/PANCollection/gf2/test/test_gf2_multiExm1.h5 #/data/lzm/PANCollection/wv_3/test/RR_TestData_wv3.h5  /data/lzm/PANCollection/wv_3/test/test_wv3_OrigScale_multiExm1.h5
+  data_type: mul #ori mul
+  source_ms: ms
+  source_pan: pan
+  model: stage-one_4_1754014655/150.pth
+  save_dir: /data/lzm/qb_gf2/stage-one/4655/rr/150
+
+  save_dir_expert: /data/lzm/contrast/stage-one/1148/rr/460
+
+data:
+  upsacle:  4
+  batch_size: 16 
+  patch_size: 32
+  data_augmentation: False
+  n_colors: 32
+  rgb_range: 255
+  normalize : False
+
+schedule:
+  lr: 1e-3 
+  decay: 1000
+  gamma: 0.1
+  optimizer: ADAM #[ADAM, SGD, RMSprop]
+  momentum: 0.9 #SGD momentum
+  beta1: 0.9 #ADAM beta
+  beta2: 0.999 #ADAM beta
+  epsilon: 1e-8 #ADAM epsilon
+  alpha: 0.9 #RMSprop alpha
+  weight_dency: 0.1
+  gclip: 0.4 
+  loss: L1 #[MSE, L1]
+  use_YCbCr: False
+
