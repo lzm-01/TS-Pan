@@ -8,7 +8,7 @@ LastEditTime: 2020-12-03 22:02:20
 '''
 import os, importlib, torch, shutil
 from solver.basesolver import BaseSolver
-from utils.utils import maek_optimizer, make_loss, calculate_psnr, calculate_ssim, save_config, save_net_config
+from utils.utils import maek_optimizer, make_loss, save_config, save_net_config
 import torch.backends.cudnn as cudnn
 from tqdm import tqdm
 import numpy as np
