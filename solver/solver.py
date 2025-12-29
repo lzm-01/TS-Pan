@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-# coding=utf-8
-'''
-@Author: wjm
-@Date: 2019-10-13 23:04:48
-LastEditTime: 2020-12-03 22:02:20
-@Description: file content
-'''
 import os, importlib, torch, shutil
 from solver.basesolver import BaseSolver
 from utils.utils import maek_optimizer, make_loss, save_config, save_net_config
@@ -27,15 +19,7 @@ from rich.progress import (
     TimeElapsedColumn,
     TimeRemainingColumn,
 )
-# progress_bar = Progress(
-#     TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
-#     BarColumn(),
-#     MofNCompleteColumn(),
-#     TextColumn("•"),
-#     TimeElapsedColumn(),
-#     TextColumn("•"),
-#     TimeRemainingColumn(),
-# )
+
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 class CVLoss(nn.Module):
@@ -115,26 +99,17 @@ class Solver(BaseSolver):
                 self.optimizer.zero_grad()               
                 self.model.train()
 
-                # y = self.model(lms_image, bms_image, pan_image)
-                # sr = self.model(lms,pan)
                 sr,spa_cof,spe_cof = self.model(lms, pan)
-                #
-                # sr_fft = torch.fft.fft2(sr)
-                # gt_fft = torch.fft.fft2(gt)
-
+               
                 spa_gateloss = self.gate_loss(spa_cof)
                 spe_gateloss = self.gate_loss(spe_cof)
-                # hf_loss = self.hf_loss(sr,gt)
+                
                 loss = self.loss(sr, gt) + (spa_gateloss + spe_gateloss)*0.3
                 # loss = self.loss(sr, gt)
                 epoch_loss += loss.data
-                #epoch_loss = epoch_loss + loss.data + vgg_loss.data
 
                 progress.update(task1, advance=1)
                 time.sleep(0.02)
-
-                # t.set_postfix_str("Batch loss {:.4f}".format(loss.item()))
-                # t.update()
 
                 loss.backward()
                 # print("grad before clip:"+str(self.model.output_conv.conv.weight.grad))
