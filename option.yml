@@ -9,7 +9,7 @@ log_dir: /data/lzm/qb/stage-one/logs/
 
 
 seed: 0328 #123
-checkpoint: /data/lzm/qb/stage-one/ckpt
+checkpoint: /data/lzm/qb/TS-Pan/ckpt
 data_dir_train: /data/lzm/PANCollection/qb/train/train_qb.h5 #/data/lzm/PANCollection/gf2/train/train_gf2.h5
 data_dir_eval: /data/lzm/PANCollection/qb/train/valid_qb.h5
 source_ms: ms
@@ -27,9 +27,9 @@ test:  #用于测试
   data_type: mul #ori mul
   source_ms: ms
   source_pan: pan
-  model: stage-one_4_1754014655/150.pth
-  save_dir: /data/lzm/qb_gf2/stage-one/4655/rr/150
-  save_dir_expert: /data/lzm/contrast/stage-one/1148/rr/460
+  model: stage-one_4_1754014655/150.pth # Your weight path
+  save_dir: /data/lzm/qb_gf2/TS-Pan/4655/rr/150 # The path to save mat files
+  save_dir_expert: /data/lzm/contrast/TS-Pan/1148/rr/460
 
 data:
   upsacle:  4
