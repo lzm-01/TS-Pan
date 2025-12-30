@@ -1,9 +1,8 @@
 
 name: Net
-algorithm: stage-one #freu2net_v1 freu2net_v2
-nEpochs: 500
+algorithm: TS-Pan
+nEpochs: 500 #For specific number of epochs, please refer to our paper
 gpu_mode: True
-#save_best: True
 gpus: [4]
 threads: 0  #num_works
 log_dir: /data/lzm/qb/stage-one/logs/
@@ -22,7 +21,7 @@ pretrain:
   pre_folder: /data/lzm/contrast/stage-one/ckpt/
 
 test:  #用于测试
-  algorithm: stage-one #pannetffft
+  algorithm: TS-Pan 
   type: test #[test, eval]
   data_dir: /data/lzm/PANCollection/gf2/test/test_gf2_multiExm1.h5 #/data/lzm/PANCollection/wv_3/test/RR_TestData_wv3.h5  /data/lzm/PANCollection/wv_3/test/test_wv3_OrigScale_multiExm1.h5
   data_type: mul #ori mul
@@ -30,7 +29,6 @@ test:  #用于测试
   source_pan: pan
   model: stage-one_4_1754014655/150.pth
   save_dir: /data/lzm/qb_gf2/stage-one/4655/rr/150
-
   save_dir_expert: /data/lzm/contrast/stage-one/1148/rr/460
 
 data:
