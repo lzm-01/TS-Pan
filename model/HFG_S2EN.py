@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from model.SWT_detail import MultiLevelLearnableSWT2D, ChannelSpecificMultiLevelSWT2D_new
+from model.MHF_FE import HF_PAN, HF_MS
 from model.my_modules import HFG_Block_T, Up, Down, S2fusionV5
 from model.CTB import ChannelTransformerBlock_C
 
