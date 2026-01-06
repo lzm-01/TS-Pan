@@ -29,4 +29,9 @@ To test the trained pan-sharpening model, you can run the following command:
 python test.py
 ```
 
+## Model Efficiency
+To obtain model efficiency metrics (Params, FLOPs, Inference Time, FPS), you can run the following command:
+```
+python test.py
+```
 
