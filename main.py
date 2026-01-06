@@ -4,7 +4,7 @@ import argparse
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='N_SR')
-    parser.add_argument('--option_path', type=str, default='/home/lizhuomao/Contrast4/restruct/MSDDN-main/option.yml')
+    parser.add_argument('--option_path', type=str, default='your_option_yml_path') # For instance '/home/user/project/option.yml'
     opt = parser.parse_args()
     cfg = get_config(opt.option_path)
     solver = Solver(cfg)
