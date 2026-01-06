@@ -1,9 +1,22 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from model.my_modules import ResBlock
 from model.HF_guided import HFG_S2EN
 import torch.nn.init as init
+
+class ResBlock(nn.Module):
+    def __init__(self, in_channels, hidden_channels, out_channels):
+        super().__init__()
+        self.conv0 = nn.Conv2d(in_channels, hidden_channels, 3, 1, 1)
+        self.conv1 = nn.Conv2d(hidden_channels, out_channels, 3, 1, 1)
+        self.relu = nn.LeakyReLU()
+
+    def forward(self, x):
+        rs1 = self.relu(self.conv0(x))
+        rs1 = self.conv1(rs1)
+        rs = torch.add(x, rs1)
+        return rs
+
 
 class AdvancedSpatialASL(nn.Module):
     def __init__(self, in_channels, kernel_size=7, reduction_ratio=4):
@@ -41,23 +54,18 @@ class SpeProcess(nn.Module):
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
         self.max_pool = nn.AdaptiveMaxPool2d(1)
 
-        # MLP层
         self.fc = nn.Sequential(
             nn.Conv2d(in_channels, in_channels // reduction_ratio, kernel_size=1, bias=False),
             # nn.ReLU(),
             nn.LeakyReLU(0.2),
             nn.Conv2d(in_channels // reduction_ratio, in_channels, kernel_size=1, bias=False)
         )
-        # self.sigmoid = nn.Sigmoid()
-
+        
     def forward(self, x):
-        # 平均池化和最大池化的输出
         avg_out = self.fc(self.avg_pool(x))
         max_out = self.fc(self.max_pool(x))
 
-        # 将两个输出相加
         out = avg_out + max_out
-        # return self.sigmoid(out)
         return out
 
 
