@@ -49,5 +49,27 @@ The configuration options are stored in the `option.yaml` file. Here is an expla
   - `algorithm`: The model for training (your model file, i.e., tspan)
 ### Logging
   - `log_dir`: The location where the log files will be stored.
+### Model Weights
+  - `checkpoint`: The location to store the model weights.
+### Training Data
+  - `data_dir_train`: The location of the training data.
+  - `data_dir_eval`: The location of the test data.
+### Pretrain
+  - `pretrained`: Whether to use a pretrained model. (Bool)
+  - `pre_sr`: The location of the pretrained model.
+  - `pre_folder`: The location where the pretrained models are stored.
+### Testing
+  - `algorithm`: The algorithm to use for testing.
+  - `data_dir`: The location of the test data.
+  - `model`: The location of the model to use for testing.
+  - `save_dir`: The location to save the test results.
+### Data Processing
+  - `batch_size`: The size of each batch.
+  - `n_colors`: The number of color channels.
+### Training Hyperparameters
+  - `schedule.lr`: The learning rate.
+  - `schedule.decay`: The learning rate decay.
+  - `schedule.optimizer`: The optimizer to use, either `ADAM`, `SGD`, or `RMSprop`.
+  - `schedule.momentum`: The momentum for the SGD optimizer.
 
 
