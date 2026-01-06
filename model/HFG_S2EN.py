@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from model.MHF_FE import HF_PAN, HF_MS
-from model.my_modules import HFG_Block_T, Up, Down, SSAIB
-from model.CTB import ChannelTransformerBlock_C
+from model.my_modules import HFG_LGEB, HFG_CEB, Up, Down, SSAIB
+
 
 class SpanConv(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size):
@@ -117,11 +117,11 @@ class HFG_S2EN(nn.Module):
         )
         self.hf_detail_pan = HF_PAN(3)
         self.hf_detail_ms = HF_MS(ms_dim,3)
-        self.hf_guided_encoder = HFG_Block_T(self.in_channels, self.num_heads, self.win_size, ffn_expansion_factor,
+        self.hf_guided_encoder = HFG_LGEB(self.in_channels, self.num_heads, self.win_size, ffn_expansion_factor,
                                              bias, LayerNorm_type)
-        self.hf_bottleneck = ChannelTransformerBlock_C(self.bottleneck_channels, self.num_heads*2, ffn_expansion_factor,
+        self.hf_bottleneck = HFG_CEB(self.bottleneck_channels, self.num_heads*2, ffn_expansion_factor,
                                                        bias, LayerNorm_type)
-        self.hf_guided_decoder = HFG_Block_T(self.in_channels, self.num_heads, self.win_size, ffn_expansion_factor,
+        self.hf_guided_decoder = HFG_LGEB(self.in_channels, self.num_heads, self.win_size, ffn_expansion_factor,
                                              bias, LayerNorm_type)
 
     def forward(self, spa, spe, pan, ms_up):
