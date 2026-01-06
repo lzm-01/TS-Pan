@@ -115,8 +115,8 @@ class HFG_S2EN(nn.Module):
             nn.Conv2d(pan_ms_dim,out_channels,1,1,0),
             nn.Conv2d(out_channels,out_channels,5,1,2,groups=out_channels,bias=False),
         )
-        self.hf_detail_pan = MultiLevelLearnableSWT2D(3)
-        self.hf_detail_ms = ChannelSpecificMultiLevelSWT2D_new(ms_dim,3)
+        self.hf_detail_pan = HF_PAN(3)
+        self.hf_detail_ms = HF_MS(ms_dim,3)
         self.hf_guided_encoder = HFG_Block_T(self.in_channels, self.num_heads, self.win_size, ffn_expansion_factor,
                                              bias, LayerNorm_type)
         self.hf_bottleneck = ChannelTransformerBlock_C(self.bottleneck_channels, self.num_heads*2, ffn_expansion_factor,
