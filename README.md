@@ -11,7 +11,7 @@ Zhihao Li,
 
 
 ## This repository is the official implementation of our paper. 
-### The complete code and Readme files will be uploaded before the end of Jan. 2026. 
+### The complete code and README files will be uploaded before the end of Jan. 2026. 
 ### TS-Pan Framework
 ![这是图片](/src/net.png)
 ### High-Frequency-Guided Local-Glocal Enhancement Block (HFG-LGEB)
