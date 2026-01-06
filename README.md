@@ -10,7 +10,13 @@ Zhihao Li,
 [gongping]: https://faculty.sdu.edu.cn/gpyang/zh_CN/index.htm
 
 
-## This repository is the official implementation of our paper. 
+This repository is the official implementation of our paper:  
+[Two-Step Pansharpening: A High-Frequency-Guided Spatial-Spectral Enhancement Network Based on Mixture of Experts][tspan],  
+IEEE Transactions on Geoscience and Remote Sensing (TGRS) 2025.
+
+[tspan]: https://ieeexplore.ieee.org/document/11316500
+
+
 ### TS-Pan Framework
 ![这是图片](/src/net.png)
 ### High-Frequency-Guided Local-Glocal Enhancement Block (HFG-LGEB)
