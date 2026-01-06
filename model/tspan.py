@@ -2,12 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from model.my_modules import ResBlock
-from model.HF_guided import ProgressiveFusionNet
+from model.HF_guided import HFG_S2EN
 import torch.nn.init as init
-
-
-import numbers
-from einops import rearrange
 
 class AdvancedSpatialASL(nn.Module):
     def __init__(self, in_channels, kernel_size=7, reduction_ratio=4):
@@ -248,7 +244,7 @@ class Net(nn.Module):
             nn.Conv2d(dim*2,dim,1,1,0,groups=dim),
             nn.LeakyReLU(0.1)
         )
-        self.process = ProgressiveFusionNet(dim, dim, num_heads=num_heads, win_size=win_size, ffn_expansion_factor=ffn_expansion_factor, LayerNorm_type=LayerNorm_type)
+        self.process = HFG_S2EN(dim, dim, num_heads=num_heads, win_size=win_size, ffn_expansion_factor=ffn_expansion_factor, LayerNorm_type=LayerNorm_type)
         self.post = nn.Conv2d(dim,ms_dim,1,1,0)
 
     def forward(self, ms, pan):
