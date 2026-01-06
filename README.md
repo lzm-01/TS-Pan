@@ -22,13 +22,14 @@ IEEE Transactions on Geoscience and Remote Sensing (TGRS) 2025.
 ### High-Frequency-Guided Local-Glocal Enhancement Block (HFG-LGEB)
 ![这是图片](/src/hfg.png)
 
-## Configuration before Training
+## Before Training
 Before training the model, you need to configure the following options in the `option.yaml` file:
   - `log_dir`: the directory to store the training log files.
   - `checkpoint`: the directory to store the trained model parameters.
   - `data_dir_train`: the directory of the training data.
   - `data_dir_eval`: the directory of the evaluation data.
 
+In `main.py`, you must set the right path about the `option.yml`.
 Also, you need to configure the right path in `save_config` and `save_net_config` function of `utils.py`
 
 ## Training the Model
@@ -105,9 +106,14 @@ The configuration options are stored in the `option.yaml` file. Here is an expla
 
 - This code repo is based on the [pansharpening code framework][ps], and we are very grateful for the contributions made by [manman1995][zhouman].
 
+- Thanks for the contributions of [RWKV-UNet][rwkv-u] and [Restore-RWKV][res-rwkv] to the [Vision-RWKV][vrwkv] community.
+
 [dengliangjian]: https://liangjiandeng.github.io/
 [pancollection]: https://liangjiandeng.github.io/PanCollection.html
 [ps]: https://github.com/manman1995/pansharpening
 [zhouman]: https://github.com/manman1995
+[rwkv-u]: https://github.com/juntaoJianggavin/RWKV-UNet
+[res-rwkv]: https://github.com/Yaziwel/Restore-RWKV
+[vrwkv]: https://github.com/OpenGVLab/Vision-RWKV
 
 
