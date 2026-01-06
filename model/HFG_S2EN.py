@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from model.MHF_FE import HF_PAN, HF_MS
-from model.my_modules import HFG_Block_T, Up, Down, S2fusionV5
+from model.my_modules import HFG_Block_T, Up, Down, SSAIB
 from model.CTB import ChannelTransformerBlock_C
 
 class SpanConv(nn.Module):
@@ -74,9 +74,9 @@ class HFG_S2EN(nn.Module):
         self.spa_up = Up(self.bottleneck_channels)
         self.spe_up = Up(self.bottleneck_channels)
 
-        self.s2_1 = S2fusionV5(self.in_channels)
-        self.s2_2 = S2fusionV5(self.bottleneck_channels)
-        self.s2_3 = S2fusionV5(self.in_channels)
+        self.s2_1 = SSAIB(self.in_channels)
+        self.s2_2 = SSAIB(self.bottleneck_channels)
+        self.s2_3 = SSAIB(self.in_channels)
 
         self.point_conv = nn.Conv2d(self.bottleneck_channels, self.out_channels, 1, 1, 0)
         self.spa_conv1 = SpanConv(in_channels,out_channels,3)
