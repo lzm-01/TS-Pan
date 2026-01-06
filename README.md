@@ -1,5 +1,14 @@
 # [TGRS 2025] Two-Step Pansharpening: A High-Frequency-Guided Spatial-Spectral Enhancement Network Based on Mixture of Experts
-Zhuomao Li, Ying Li, Zhihao Li, Yikun Liu, Gongping Yang
+[Zhuomao Li][zhuomao], 
+Ying Li, 
+Zhihao Li, 
+[Yikun Liu][yikun], 
+[Gongping Yang][gongping]
+
+[zhuomao]: https://time.sdu.edu.cn/info/1069/2627.htm
+[yikun]: https://scholar.google.com/citations?user=aLjH3NUAAAAJ&hl=zh-CN&oi=ao
+[gongping]: https://faculty.sdu.edu.cn/gpyang/zh_CN/index.htm
+
 
 ## This repository is the official implementation of our paper. The complete code will be uploaded before the end of Jan. 2026. 
 ### TS-Pan Framework
