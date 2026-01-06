@@ -4,7 +4,6 @@ import torch.nn.functional as F
 from einops import rearrange  
 from timm.models.layers import to_2tuple, trunc_normal_
 import numbers
-from model.CTB import ChannelTransformerBlock_C
 from model.q_shift_style_rwkv import VRWKV_SpatialMix_Diag
 
 class Down(nn.Module):
@@ -25,9 +24,6 @@ class Up(nn.Module):
 
     def forward(self, x):
         return self.body(x)
-
-
-
 
 def to_3d(x):
     return rearrange(x, 'b c h w -> b (h w) c')
@@ -213,9 +209,9 @@ class WM_CA(nn.Module):
 
         return output_bchw
 
-class Freprocess(nn.Module):
+class Fre(nn.Module):
     def __init__(self, channels):
-        super(Freprocess, self).__init__()
+        super(Fre, self).__init__()
         self.pre1 = nn.Conv2d(channels,channels,1,1,0)
         self.pre2 = nn.Conv2d(channels,channels,1,1,0)
         self.amp_fuse = nn.Sequential(nn.Conv2d(2*channels,channels,1,1,0),nn.LeakyReLU(0.1,inplace=False),
@@ -244,15 +240,15 @@ class Freprocess(nn.Module):
         return self.post(out)
 
 
-class S2_HF_SPA(nn.Module):
+class LGB(nn.Module):
     def __init__(self,channels, win_size, num_heads):
-        super(S2_HF_SPA, self).__init__()
+        super(LGB, self).__init__()
 
         self.channels = channels
         self.half_channels = channels // 2
         self.win_size = win_size
         self.num_heads = num_heads
-        self.HF_1 = Freprocess(self.half_channels)
+        self.HF_1 = Fre(self.half_channels)
         self.HF_2 = WM_CA(self.half_channels, win_size, num_heads)
         self.q_shift_spatial_rwkv = VRWKV_SpatialMix_Diag(self.channels)
         self.after_spa_norm = nn.LayerNorm(self.channels)
@@ -279,24 +275,6 @@ class S2_HF_SPA(nn.Module):
 
         return local_global_un + local_global
 
-class CMX_Diag(nn.Module):
-    def __init__(self, channels):
-        super(CMX_Diag, self).__init__()
-        self.channels = channels
-
-        self.channel_mix_diag = VRWKV_ChannelMix_Diag(self.channels)
-
-    def forward(self, x):
-        b, c, h, w = x.shape
-
-        resolution = (h, w)
-
-        x_flat = rearrange(x, 'b c h w -> b (h w) c').contiguous()
-        x_flat = self.channel_mix_diag(x_flat, resolution)
-        x_unfold = rearrange(x_flat, 'b (h w) c -> b c h w', h=h, w=w).contiguous()
-
-        return x_unfold
-
 class FeedForward(nn.Module):
     def __init__(self, dim, ffn_expansion_factor, bias):
         super(FeedForward, self).__init__()
@@ -311,32 +289,28 @@ class FeedForward(nn.Module):
         x1, x2 = self.dwconv(x).chunk(2, dim=1)
         x = F.gelu(x1) * x2
         x = self.project_out(x)
+        
         return x
 
-class HighFre_Guided_Transformer(nn.Module):
+class HFGB(nn.Module):
     def __init__(self, dim, num_heads,  win_size, ffn_expansion_factor, bias, LayerNorm_type):
-        super(HighFre_Guided_Transformer, self).__init__()
+        super(HFGB, self).__init__()
 
         self.norm1_s2 = LayerNorm(dim, LayerNorm_type)
         self.norm1_hf = LayerNorm(dim, LayerNorm_type)
-        self.attn = S2_HF_SPA(dim, win_size, num_heads)
+        self.attn = LGB(dim, win_size, num_heads)
         self.norm2 = LayerNorm(dim, LayerNorm_type)
         self.ffn = FeedForward(dim, ffn_expansion_factor, bias)
-        # self.ffn = CMX_Diag(dim)
+        
     def forward(self, s2, hf):
-        # print("s2.shape", s2.shape)
         x = s2 + self.attn(self.norm1_s2(s2),self.norm1_hf(hf))
         x = x + self.ffn(self.norm2(x))
 
         return x
 
-
-
-
-
-class HFG_Block_T(nn.Module):
+class HFG_LGEB(nn.Module):
     def __init__(self, dim, num_heads, win_size,ffn_expansion_factor, bias, LayerNorm_type):
-        super(HFG_Block_T, self).__init__()
+        super(HFG_LGEB, self).__init__()
 
         self.dim = dim
         self.bottleneck_dim = dim * 2
@@ -349,9 +323,9 @@ class HFG_Block_T(nn.Module):
 
         self.conv_concat = PointConv(dim*2, dim)
 
-        self.encoder = HighFre_Guided_Transformer(self.dim, self.num_heads, self.win_size, ffn_expansion_factor, bias, LayerNorm_type)
-        self.bottleneck = HighFre_Guided_Transformer(self.bottleneck_dim, self.num_heads*2,  self.win_size, ffn_expansion_factor, bias, LayerNorm_type)
-        self.decoder = HighFre_Guided_Transformer(self.dim, self.num_heads, self.win_size, ffn_expansion_factor, bias, LayerNorm_type)
+        self.encoder = HFGB(self.dim, self.num_heads, self.win_size, ffn_expansion_factor, bias, LayerNorm_type)
+        self.bottleneck = HFGB(self.bottleneck_dim, self.num_heads*2,  self.win_size, ffn_expansion_factor, bias, LayerNorm_type)
+        self.decoder = HFGB(self.dim, self.num_heads, self.win_size, ffn_expansion_factor, bias, LayerNorm_type)
 
     def forward(self, s2, hf):
         en = self.encoder(s2, hf)
