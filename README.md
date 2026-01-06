@@ -22,6 +22,7 @@ Before training the model, you need to configure the following options in the `o
   - `checkpoint`: the directory to store the trained model parameters.
   - `data_dir_train`: the directory of the training data.
   - `data_dir_eval`: the directory of the evaluation data.
+
 Also, you need to configure the right path in `save_config` and `save_net_config` function of `utils.py`
 
 ## Training the Model
