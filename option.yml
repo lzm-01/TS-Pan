@@ -29,16 +29,12 @@ test:  #用于测试
   source_pan: pan
   model: tspan_4_1754014655/150.pth # Your weight path
   save_dir: /data/lzm/qb_gf2/TS-Pan/4655/rr/150 # The path to save mat files
-  save_dir_expert: /data/lzm/contrast/tspan/1148/rr/460
+  save_dir_expert: /data/lzm/contrast/tspan/1148/rr/460 # The path to save visual map for expert
 
 data:
   upsacle:  4
   batch_size: 16 
-  patch_size: 32
-  data_augmentation: False
   n_colors: 32
-  rgb_range: 255
-  normalize : False
 
 schedule:
   lr: 1e-3 
@@ -53,5 +49,4 @@ schedule:
   weight_dency: 0.1
   gclip: 0.4 
   loss: L1 #[MSE, L1]
-  use_YCbCr: False
 
