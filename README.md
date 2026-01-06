@@ -17,4 +17,16 @@ Zhihao Li,
 ### High-Frequency-Guided Local-Glocal Enhancement Block (HFG-LGEB)
 ![这是图片](/src/hfg.png)
 
+## Training the Model
+To train the model, you can run the following command:
+```
+python main.py
+```
+
+## Testing the Model
+To test the trained pan-sharpening model, you can run the following command:
+```
+python test.py
+```
+
 
