@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from einops import rearrange  
 from timm.models.layers import to_2tuple, trunc_normal_
 import numbers
-from model.q_shift_style_rwkv import VRWKV_SpatialMix_Diag
+from model.rwkv import VRWKV_SpatialMix_Diag
 
 class Down(nn.Module):
     def __init__(self, n_feat):
