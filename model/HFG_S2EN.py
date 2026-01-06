@@ -134,7 +134,6 @@ class HFG_S2EN(nn.Module):
         spa1 = self.spa_conv1(spa)
         spe1 = self.spe_conv1(spe)
         s2_1 = self.s2_1(spa1, spe1)
-        # s2_1 = self.d_point_conv_1(torch.cat((spa1,spe1),dim=1))
         spa1 = self.hf_guided_encoder(s2_1, D1)
         spa1_copy = spa1
 
@@ -145,16 +144,13 @@ class HFG_S2EN(nn.Module):
         spa2 = self.spa_conv2(spa1)
         spe2 = self.spe_conv2(spe1)
         s2_2 = self.s2_2(spa2, spe2)
-        # s2_2 = self.d_point_conv_2(torch.cat((spa2, spe2), dim=1)) ### B C*4 H//2 W//2 --->  B C*2 H//2 W//2
         spa2 = self.hf_bottleneck(s2_2, D2)
-
         spa2 = self.spa_up(spa2)
         spe2 = self.spe_up(spe2)
 
         ### Stage 3
         spa3 = self.spa_conv3(spa2) + spa
         spe3 = self.spe_conv3(spe2) + spe
-        # s2_3 = self.d_point_conv_3(torch.cat((spa3, spe3), dim=1))
         s2_3 = self.s2_3(spa3, spe3)
         spa3 = self.hf_guided_decoder(self.point_conv(torch.cat((s2_3,spa1_copy),dim=1)),D3)
 
