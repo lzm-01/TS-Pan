@@ -41,5 +41,13 @@ To obtain model efficiency metrics (Params, FLOPs, Inference Time, FPS), you can
 python params_flops_inference_time.py
 ```
 
+## Configuration
+The configuration options are stored in the `option.yaml` file. Here is an explanation of each of the options:
+### Your Model Name
+  - `name`: The model name in python file for training (In this file, we named `Net` in `tspan.py`)
+### algorithm
+  - `algorithm`: The model for training (your model file, i.e., tspan)
+### Logging
+  - `log_dir`: The location where the log files will be stored.
 
 
