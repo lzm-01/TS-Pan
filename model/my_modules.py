@@ -209,6 +209,40 @@ class WM_CA(nn.Module):
 
         return output_bchw
 
+class Cross_Attention(nn.Module):
+    def __init__(self, dim, num_heads, bias):
+        super(Cross_Attention, self).__init__()
+        self.num_heads = num_heads
+        self.temperature = nn.Parameter(torch.ones(num_heads, 1, 1))
+        self.q = nn.Conv2d(dim, dim, kernel_size=1, bias=bias)
+        self.q_dwconv = nn.Conv2d(dim, dim, kernel_size=3, stride=1, padding=1, groups=dim, bias=bias)
+        self.kv = nn.Conv2d(dim, dim * 2, kernel_size=1, bias=bias)
+        self.kv_dwconv = nn.Conv2d(dim * 2, dim * 2, kernel_size=3, stride=1, padding=1, groups=dim * 2, bias=bias)
+        self.project_out = nn.Conv2d(dim, dim, kernel_size=1, bias=bias)
+
+    def forward(self, x, hf):
+        b, c, h, w = x.shape
+        q = self.q_dwconv(self.q(hf))
+        kv = self.kv_dwconv(self.kv(x))
+        k, v = kv.chunk(2, dim=1)
+
+        q = rearrange(q, 'b (head c) h w -> b head c (h w)', head=self.num_heads)
+        k = rearrange(k, 'b (head c) h w -> b head c (h w)', head=self.num_heads)
+        v = rearrange(v, 'b (head c) h w -> b head c (h w)', head=self.num_heads)
+
+        q = torch.nn.functional.normalize(q, dim=-1)
+        k = torch.nn.functional.normalize(k, dim=-1)
+
+        attn = (q @ k.transpose(-2, -1)) * self.temperature
+        attn = attn.softmax(dim=-1)
+
+        out = (attn @ v)
+
+        out = rearrange(out, 'b head c (h w) -> b (head c) h w', head=self.num_heads, h=h, w=w)
+
+        out = self.project_out(out)
+        return out
+
 class Fre(nn.Module):
     def __init__(self, channels):
         super(Fre, self).__init__()
@@ -337,7 +371,20 @@ class HFG_LGEB(nn.Module):
         de = self.decoder(self.conv_concat(torch.cat([bottleneck_up, en],dim=1)), hf)
         return de
 
+class HFG_CEB(nn.Module):
+    def __init__(self, dim, num_heads, ffn_expansion_factor, bias, LayerNorm_type):
+        super(HFG_CEB, self).__init__()
 
+        self.norm1 = LayerNorm(dim, LayerNorm_type)
+        self.attn = Cross_Attention(dim, num_heads, bias)
+        self.norm2 = LayerNorm(dim, LayerNorm_type)
+        self.ffn = FeedForward(dim, ffn_expansion_factor, bias)
+
+    def forward(self, x, hf):
+        x = x + self.attn(self.norm1(x), self.norm1(hf))
+        x = x + self.ffn(self.norm2(x))
+
+        return x
 
 
 
