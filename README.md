@@ -17,6 +17,13 @@ Zhihao Li,
 ### High-Frequency-Guided Local-Glocal Enhancement Block (HFG-LGEB)
 ![这是图片](/src/hfg.png)
 
+## Configuration before Training
+Before training the model, you need to configure the following options in the `option.yaml` file:
+  - `log_dir`: the directory to store the training log files.
+  - `checkpoint`: the directory to store the trained model parameters.
+  - `data_dir_train`: the directory of the training data.
+  - `data_dir_eval`: the directory of the evaluation data.
+
 ## Training the Model
 To train the model, you can run the following command:
 ```
@@ -34,4 +41,6 @@ To obtain model efficiency metrics (Params, FLOPs, Inference Time, FPS), you can
 ```
 python params_flops_inference_time.py
 ```
+
+
 
