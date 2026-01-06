@@ -10,7 +10,8 @@ Zhihao Li,
 [gongping]: https://faculty.sdu.edu.cn/gpyang/zh_CN/index.htm
 
 
-## This repository is the official implementation of our paper. The complete code will be uploaded before the end of Jan. 2026. 
+## This repository is the official implementation of our paper. 
+### The complete code will be uploaded before the end of Jan. 2026. 
 ### TS-Pan Framework
 ![这是图片](/src/net.png)
 ### High-Frequency-Guided Local-Glocal Enhancement Block (HFG-LGEB)
