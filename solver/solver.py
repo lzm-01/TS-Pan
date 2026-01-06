@@ -50,14 +50,8 @@ class Solver(BaseSolver):
         )
         self.optimizer = maek_optimizer(self.cfg['schedule']['optimizer'], cfg, self.model.parameters())
         self.loss = make_loss(self.cfg['schedule']['loss'])
-        # self.loss2 = make_loss(self.cfg['schedule']['loss'])
         self.gate_loss = CVLoss()
-        # self.hf_loss = HighFrequencyLoss()
-        # self.weight_loss = torch.nn.Parameter(torch.tensor(0.01))
-        # self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer,500,0.5,last_epoch=-1) #torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer,20,0)
-        #self.vggloss = make_loss('VGG54')
         self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, 100, gamma=0.5)
-        # self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer,50,1e-5)
         self.log_name = self.cfg['algorithm'] + '_' + str(self.cfg['data']['upsacle']) + '_' + str(self.timestamp)
         # save log
         self.writer = SummaryWriter(self.cfg['log_dir']+ str(self.log_name))
@@ -79,13 +73,6 @@ class Solver(BaseSolver):
                 # TextColumn("Batch loss {:.4f}".format(loss.item()))
         ) as progress:
             task1 = progress.add_task("[yellow]Initial Training Epoch: [{}/{}]".format(self.epoch, self.nEpochs), total=len(self.train_loader))
-            # while not progress.finished:
-                # progress.update(task1, advance=0.5)
-
-                # time.sleep(0.02)
-        # with tqdm(total=len(self.train_loader), miniters=1,
-        #         desc='Initial Training Epoch: [{}/{}]'.format(self.epoch, self.nEpochs)) as t:
-
 
             epoch_loss = 0
             for iteration, batch in enumerate(self.train_loader, 1):
@@ -129,9 +116,6 @@ class Solver(BaseSolver):
                 self.optimizer.step()
             self.scheduler.step()
             self.records['Loss'].append(epoch_loss / len(self.train_loader))
-            # self.writer.add_image('image1', ms_image[0], self.epoch)
-            # self.writer.add_image('image2', y[0], self.epoch)
-            # self.writer.add_image('image3', pan_image[0], self.epoch)
             save_config(self.log_name, 'Initial Training Epoch {}: Loss={:.6f}'.format(self.epoch, self.records['Loss'][-1]))
             self.writer.add_scalar('Loss_epoch', self.records['Loss'][-1], self.epoch)
 
@@ -145,9 +129,6 @@ class Solver(BaseSolver):
                 # TextColumn("Batch loss {:.4f}".format(loss.item()))
         ) as progress:
             task1 = progress.add_task("[blue]Initial Val Epoch: [{}/{}]".format(self.epoch, self.nEpochs), total=len(self.val_loader))
-        # with tqdm(total=len(self.val_loader), miniters=1,
-        #         desc='Val Epoch: [{}/{}]'.format(self.epoch, self.nEpochs)) as t1:
-            psnr_list, ssim_list = [], []
             val_epoch_loss = 0
             for iteration, batch in enumerate(self.val_loader, 1):
                 
@@ -158,10 +139,6 @@ class Solver(BaseSolver):
                 self.model.eval()
                 with torch.no_grad():
                     sr,_,_ = self.model(lms, pan)
-                    #loss = self.loss(y, ms_image)
-                    # loss = criterion(sr, gt)
-                    # srfft = torch.fft.rfft2(sr)
-                    # gtfft = torch.fft.rfft2(gt)
 
                     loss = self.loss(sr, gt)
                     val_epoch_loss += loss.data
