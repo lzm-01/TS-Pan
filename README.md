@@ -103,9 +103,7 @@ The configuration options are stored in the `option.yaml` file. Here is an expla
 ## Acknowledgement
 
 - We would like to thank Professor [Deng][dengliangjian] for providing pan-sharpening datasets in [PanCollection][pancollection].
-
 - This code repo is based on the [pansharpening code framework][ps], and we are very grateful for the contributions made by [manman1995][zhouman].
-
 - Thanks for the contributions of [RWKV-UNet][rwkv-u] and [Restore-RWKV][res-rwkv] to the [Vision-RWKV][vrwkv] community.
 
 [dengliangjian]: https://liangjiandeng.github.io/
