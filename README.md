@@ -19,7 +19,7 @@ IEEE Transactions on Geoscience and Remote Sensing (TGRS) 2025.
 
 ### TS-Pan Framework
 ![这是图片](/src/net.png)
-### High-Frequency-Guided Local-Glocal Enhancement Block (HFG-LGEB)
+### High-Frequency-Guided Local-Global Enhancement Block (HFG-LGEB)
 ![这是图片](/src/hfg.png)
 
 ## Before Training
