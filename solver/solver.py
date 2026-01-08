@@ -76,12 +76,8 @@ class Solver(BaseSolver):
 
             epoch_loss = 0
             for iteration, batch in enumerate(self.train_loader, 1):
-                #ms_image, lms_image, pan_image, bms_image, file = Variable(batch[0]), Variable(batch[1]), Variable(batch[2]), Variable(batch[3]), (batch[4])
-                # gt, pan, lms, ms = batch[0], batch[3], batch[1], batch[4]
                 gt, pan, lms = batch[0], batch[3], batch[4]
                 if self.cuda:
-                    # ms_image, lms_image, pan_image, bms_image = ms_image.cuda(self.gpu_ids[0]), lms_image.cuda(self.gpu_ids[0]), pan_image.cuda(self.gpu_ids[0]), bms_image.cuda(self.gpu_ids[0])
-                    # gt, pan, lms, ms = gt.cuda(self.gpu_ids[0]), pan.cuda(self.gpu_ids[0]), lms.cuda(self.gpu_ids[0]), ms.cuda(self.gpu_ids[0])
                     gt, pan, lms= gt.cuda(self.gpu_ids[0]), pan.cuda(self.gpu_ids[0]), lms.cuda(self.gpu_ids[0])
                 self.optimizer.zero_grad()               
                 self.model.train()
