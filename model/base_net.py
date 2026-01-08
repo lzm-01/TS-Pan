@@ -1,5 +1,5 @@
 ###
-This is the original code from manman1995's repository.
+This is the original code from manman1995's repository. Only for the MeanShift used in VGG loss function.
 ##
 
 import torch
