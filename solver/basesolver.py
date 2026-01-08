@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-# coding=utf-8
-'''
-@Author: wjm
-@Date: 2019-10-13 23:07:03
-LastEditTime: 2020-11-25 19:24:54
-@Description: file content
-'''
 import os, torch, time
 from utils.utils import save_config
 from data.dataset import data
@@ -26,13 +18,6 @@ class BaseSolver:
             self.num_workers = cfg['threads']
         else:
             self.num_workers = 0
-
-        # self.train_dataset = get_data(cfg, cfg['data_dir_train'])
-        # self.train_loader = DataLoader(self.train_dataset, cfg['data']['batch_size'], shuffle=False,
-        #     num_workers=self.num_workers)
-        # self.val_dataset = get_data(cfg, cfg['data_dir_eval'])
-        # self.val_loader = DataLoader(self.val_dataset, cfg['data']['batch_size'], shuffle=False,
-        #     num_workers=self.num_workers)
 
         self.train_dataset = Dataset_Pro(cfg['data_dir_train'])
         self.train_loader = DataLoader(dataset=self.train_dataset, batch_size=cfg['data']['batch_size'], shuffle=True, num_workers=self.num_workers,
