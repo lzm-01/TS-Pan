@@ -32,6 +32,9 @@ Before training the model, you need to configure the following options in the `o
 In `main.py`, you must set the right path about the `option.yml`.
 Also, you need to configure the right path in `save_config` and `save_net_config` function of `utils.py`
 
+### Preparing the Datasets
+We provide the code for dataset in `data\load_train_data.py` and `data\load_test_data.py`. When training your model on the Gaofen-2 dataset, you must normalize the data by dividing by `1023`. The same applies to testing.
+
 ## Training the Model
 To train the model, you can run the following command:
 ```
