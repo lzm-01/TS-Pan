@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-# coding=utf-8
-'''
-@Author: wjm
-@Date: 2019-10-13 23:12:52
-LastEditTime: 2020-11-25 23:00:57
-@Description: file content
-'''
 import os, math, torch,cv2
 import torch.nn as nn
 import numpy as np
