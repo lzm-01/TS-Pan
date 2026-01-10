@@ -91,14 +91,14 @@ The configuration options are stored in the `option.yaml` file. Here is an expla
   Please kindly cite our work if this work is helpful for your research.
 ```
 @article{li2025tspan,
-  author={Li, Zhuomao and Li, Ying and Li, Zhihao and Liu, Yikun and Yang, Gongping},
+ author={Li, Zhuomao and Li, Ying and Li, Zhihao and Liu, Yikun and Yang, Gongping},
   journal={IEEE Transactions on Geoscience and Remote Sensing}, 
-  title={Two-Step Pansharpening: A High-Frequency-Guided Spatial-Spectral Enhancement Network Based on Mixture of Experts}, 
-  year={2025},
-  volume={},
+  title={Two-Step Pansharpening: A High-Frequency-Guided Spatial–Spectral Enhancement Network Based on Mixture of Experts}, 
+  year={2026},
+  volume={64},
   number={},
-  pages={1-1},
-  keywords={Pansharpening;Remote sensing;Computational modeling;Feature extraction;Spatial resolution;Transformers;Semantics;Context modeling;Vegetation mapping;Buildings;Deep learning (DL);two-step pansharpening network;mixture of experts;high-frequency-guided;spatial-spectral enhancement},
+  pages={1-19},
+  keywords={Pansharpening;Remote sensing;Computational modeling;Feature extraction;Spatial resolution;Transformers;Semantics;Context modeling;Vegetation mapping;Buildings;Deep learning (DL);high-frequency guided;mixture of experts (MoE);spatial–spectral enhancement;two-step pansharpening network},
   doi={10.1109/TGRS.2025.3648716}}
 
 ```
