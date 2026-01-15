@@ -46,7 +46,7 @@ To test the trained pan-sharpening model, you can run the following command and 
 ```
 python test.py
 ```
-Next, you can use Matlab to obtain evaluation metrics (PSNR, Q2n, SAM,...). More testing details please refer to [Test-toolbox-for-traditional-and-DL(Matlab)][test]. And we also provide our testing scripts (`TestRR` and `TestFR`) and `PSNR` metric at our repo.
+Next, you can use Matlab to obtain evaluation metrics (PSNR, Q2n, SAM,...). More testing details please refer to [Test-toolbox-for-traditional-and-DL(Matlab)][test]. And we also provide our testing scripts (`TestRR` and `TestFR`) and `PSNR` metric in our repo.
 
 [test]: https://github.com/liangjiandeng/DLPan-Toolbox/tree/main/02-Test-toolbox-for-traditional-and-DL(Matlab)
 
