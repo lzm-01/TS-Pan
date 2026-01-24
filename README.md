@@ -1,4 +1,4 @@
-# [TGRS 2025] Two-Step Pansharpening: A High-Frequency-Guided Spatial-Spectral Enhancement Network Based on Mixture of Experts
+# [TGRS 2026] Two-Step Pansharpening: A High-Frequency-Guided Spatial-Spectral Enhancement Network Based on Mixture of Experts
 [Zhuomao Li][zhuomao], 
 Ying Li, 
 Zhihao Li, 
@@ -12,7 +12,7 @@ Zhihao Li,
 
 This repository is the official implementation of our paper:  
 [Two-Step Pansharpening: A High-Frequency-Guided Spatial-Spectral Enhancement Network Based on Mixture of Experts][tspan],  
-IEEE Transactions on Geoscience and Remote Sensing (TGRS) 2025.
+IEEE Transactions on Geoscience and Remote Sensing (TGRS) 2026.
 
 [tspan]: https://ieeexplore.ieee.org/document/11316500
 
