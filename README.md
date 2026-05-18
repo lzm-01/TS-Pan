@@ -5,7 +5,7 @@ Zhihao Li,
 [Yikun Liu][yikun], 
 [Gongping Yang][gongping]
 
-[zhuomao]: https://time.sdu.edu.cn/info/1069/2627.htm
+[zhuomao]: https://lzm-01.github.io/Zhuomao-Homepage/
 [yikun]: https://scholar.google.com/citations?user=aLjH3NUAAAAJ&hl=zh-CN&oi=ao
 [gongping]: https://faculty.sdu.edu.cn/gpyang/zh_CN/index.htm
 
